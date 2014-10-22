@@ -1,0 +1,61 @@
+<f:layout name="Backend" />
+
+<f:section name="title">
+    <h1><f:translate key="title.dbal.main">Request list</f:translate></h1>
+</f:section>
+
+<f:section name="content">
+    <f:form action="main">
+        <f:form.submit name="openLog" value="Refresh" />
+    </f:form>
+
+    <f:form action="show">
+        <f:form.textfield name="log" value="" />
+        <f:form.submit name="openLog" value="Open Log" />
+    </f:form>
+
+    <f:if condition="{LogList}">
+        <f:then>
+            <table border="0" cellpadding="0" cellspacing="1" width="100%" class="typo3-dblist">
+                <colgroup>
+                    <col width="20" />
+                    <col width="*" />
+                    <col width="250" />
+                </colgroup>
+                <thead>
+                <tr>
+                    <td class="t3-row-header">&nbsp;</td>
+                    <td class="t3-row-header"><strong><f:translate key="table.header.request">Request</f:translate></strong></td>
+                    <td class="t3-row-header"><strong><f:translate key="table.header.info">Info</f:translate></strong></td>
+                </tr>
+                </thead>
+                <tbody>
+                <f:for each="{LogList}" as="Log" iteration="LogIteration">
+                    <tr>
+                        <!-- Toolbar -->
+                        <td>
+                            <f:be.buttons.icon uri="{f:uri.action(action:'show',arguments:{log: Log.logId})}" icon="actions-system-list-open" />
+                        </td>
+
+                        <!-- Title -->
+                        <td>
+                            <f:link.action action="show" arguments="{log: Log.logId}">{Log.logId}</f:link.action><br>
+                            <f:format.date format="d.m.Y - H:i:s">@{Log.header.time}</f:format.date><br>
+                            {Log.header.url}<br>
+                        </td>
+
+                        <!-- Info -->
+                        <td>
+                            {Log.header.mode}<br>
+                        </td>
+                    </tr>
+                </f:for>
+                </tbody>
+            </table>
+        </f:then>
+        <f:else>
+            No logs found
+        </f:else>
+    </f:if>
+
+</f:section>

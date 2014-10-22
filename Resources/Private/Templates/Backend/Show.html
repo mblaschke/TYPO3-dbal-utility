@@ -1,0 +1,146 @@
+{namespace advDbal=Lightwerk\DbalUtility\ViewHelpers}
+<f:layout name="Backend" />
+
+<f:section name="title">
+    <h1><f:translate key="title.dbal.main">Request</f:translate> {Log.logId}</h1>
+</f:section>
+
+<f:section name="content">
+
+    <div style="">
+        <f:link.action action="main">
+            <f:be.buttons.icon icon="actions-system-list-open" /> Back to list
+        </f:link.action>
+    </div>
+
+
+    <f:if condition="{Log}">
+        <table border="0" cellpadding="0" cellspacing="1" width="100%" class="typo3-dblist">
+            <colgroup>
+                <col width="150" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td class="t3-row-header"></td>
+                    <td class="t3-row-header">Basic request informations</td>
+                </tr>
+
+                <f:if condition="{Log.header.time}">
+                    <tr>
+                        <td class="t3-row-header">Time</td>
+                        <td>
+                            <f:format.date format="d.m.Y - H:i:s">@{Log.header.time}</f:format.date>
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.header.mode}">
+                    <tr>
+                        <td class="t3-row-header">TYPO3 Mode</td>
+                        <td>
+                            {Log.header.mode}
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.header.url}">
+                    <tr>
+                        <td class="t3-row-header">URL</td>
+                        <td>
+                            {Log.header.url}
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.header.cmd}">
+                    <tr>
+                        <td class="t3-row-header">Command</td>
+                        <td>
+                            {Log.header.cmd}
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.header.method}">
+                    <tr>
+                        <td class="t3-row-header">HTTP method</td>
+                        <td>
+                            {Log.header.method}
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.header.ip}">
+                    <tr>
+                        <td class="t3-row-header">Client IP</td>
+                        <td>
+                            {Log.header.ip}
+                        </td>
+                    </tr>
+                </f:if>
+
+                <f:if condition="{Log.queryList}">
+                    <tr>
+                        <td class="t3-row-header">SQL queries</td>
+                        <td>
+                            <f:count>{Log.queryList}</f:count>
+                        </td>
+                    </tr>
+                </f:if>
+
+            </tbody>
+        </table>
+
+
+        <table border="0" cellpadding="0" cellspacing="1" width="100%" class="typo3-dblist">
+            <colgroup>
+                <col width="20" />
+                <col width="*" />
+                <col width="50" />
+                <col width="50" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <td class="t3-row-header"></td>
+                    <td class="t3-row-header">Query</td>
+                    <td class="t3-row-header">Status</td>
+                    <td class="t3-row-header">Time</td>
+                </tr>
+            </thead>
+            <tbody>
+            <f:for each="{Log.queryList}" as="Query" iteration="LogIteration">
+                <tr class="db_list_normal">
+                    <td>
+                        {LogIteration.cycle}
+                    </td>
+                    <td class="dbal-query">
+                        <b>{Query.type}:</b>
+                        <advDbal:sqlBeautifier>{Query.query}</advDbal:sqlBeautifier>
+                    </td>
+                    <td>
+                        <f:if condition="{Query.status}">
+                            <f:then>
+                                ERROR #{Query.status}
+                            </f:then>
+                            <f:else>
+                                OK
+                            </f:else>
+                        </f:if>
+                    </td>
+                    <td>
+                        <f:if condition="{Query.time}">
+                            <f:then>
+                                <advDbal:sqlQueryTime>{Query.time}</advDbal:sqlQueryTime>
+                            </f:then>
+                            <f:else>
+                                -
+                            </f:else>
+                        </f:if>
+                    </td>
+                </tr>
+            </f:for>
+            </tbody>
+        </table>
+    </f:if>
+
+</f:section>

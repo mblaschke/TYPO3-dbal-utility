@@ -1,0 +1,11 @@
+	# cat=records/enable/001; type=boolean; label=Enable query logging for FE
+queryLogFE = 0
+
+	# cat=records/enable/002; type=boolean; label=Enable query logging for BE
+queryLogBE = 0
+
+	# cat=records/enable/003; type=boolean; label=Enable query logging for CLI
+queryLogCLI = 0
+
+	# cat=records/enable/003; type=boolean; label=Enable query timing logging
+queryLogTimings = 1
