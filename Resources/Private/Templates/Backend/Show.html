@@ -105,6 +105,7 @@
                     <th class="t3-row-header">Query</th>
                     <th class="t3-row-header">Status</th>
                     <th class="t3-row-header">Time</th>
+                    <th class="t3-row-header">Cost</th>
                 </tr>
             </thead>
             <tbody>
@@ -131,6 +132,16 @@
                         <f:if condition="{Query.time}">
                             <f:then>
                                 <dbalUtility:sqlQueryTime>{Query.time}</dbalUtility:sqlQueryTime>
+                            </f:then>
+                            <f:else>
+                                -
+                            </f:else>
+                        </f:if>
+                    </td>
+                    <td>
+                        <f:if condition="{Query.cost}">
+                            <f:then>
+                                {Query.cost}
                             </f:then>
                             <f:else>
                                 -

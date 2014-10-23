@@ -39,6 +39,10 @@ class PreparedStatement extends \TYPO3\CMS\Core\Database\PreparedStatement {
         $queryStartTime = null;
 
         if ($GLOBALS['TYPO3_DB'] instanceof \Lightwerk\DbalUtility\TYPO3\Database\DatabaseConnection) {
+            #####################
+            # Query stats
+            #####################
+
             // Inc query counter
             $GLOBALS['TYPO3_DB']->queryCount++;
 
@@ -47,7 +51,28 @@ class PreparedStatement extends \TYPO3\CMS\Core\Database\PreparedStatement {
                 $queryStartTime = microtime(true);
             }
 
+            #####################
+            # Run query
+            #####################
+
+            // Exec query
             $ret = parent::execute($input_parameters);
+
+            // Strict mode
+            if ($GLOBALS['TYPO3_DB']->isQueryStrictMode && (!$ret || $GLOBALS['TYPO3_DB']->sql_errno())) {
+                // SQL statement failed
+                $errorMsg = 'SQL Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . ' [errno: ' . $GLOBALS['TYPO3_DB']->sql_errno() . ']';
+
+                $e = new \Lightwerk\DbalUtility\Database\DatabaseException($errorMsg, 1403340242);
+                $e->setSqlError($GLOBALS['TYPO3_DB']->sql_error());
+                $e->setSqlErrorNumber($GLOBALS['TYPO3_DB']->sql_errno());
+                $e->setSqlQuery($this->query);
+                throw $e;
+            }
+
+            #####################
+            # Query log
+            #####################
 
             if ($GLOBALS['TYPO3_DB']->isQueryLogEnabled) {
                 // Query status
@@ -62,24 +87,26 @@ class PreparedStatement extends \TYPO3\CMS\Core\Database\PreparedStatement {
                     $queryTime = microtime(true) - $queryStartTime;
                 }
 
+                // Fetch query cost
+                $queryCost = NULL;
+                if ($GLOBALS['TYPO3_DB']->isQueryCostFetch) {
+                    $GLOBALS['TYPO3_DB']->queryLogIgnoreNextQuery = TRUE;
+
+                    $costQuery = 'SHOW STATUS LIKE \'Last_query_cost\'';
+                    $costRes = $GLOBALS['TYPO3_DB']->sql_query($costQuery);
+                    if ($costRes && $costRow = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($costRes)) {
+                        $queryCost = end($costRow);
+                    }
+                }
+
                 // Log query
                 \Lightwerk\DbalUtility\Service\RequestLogService::appendToLogfile(
                     \Lightwerk\DbalUtility\Service\RequestLogService::QUERY_TYPE_PREPARED_STATEMENT,
                     $this->query,
                     $queryStatus,
-                    $queryTime
+                    $queryTime,
+                    $queryCost
                 );
-            }
-
-            if ($GLOBALS['TYPO3_DB']->isQueryStrictMode && (!$ret || $GLOBALS['TYPO3_DB']->sql_errno())) {
-                // SQL statement failed
-                $errorMsg = 'SQL Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . ' [errno: ' . $GLOBALS['TYPO3_DB']->sql_errno() . ']';
-
-                $e = new \Lightwerk\DbalUtility\Database\DatabaseException($errorMsg, 1403340242);
-                $e->setSqlError($GLOBALS['TYPO3_DB']->sql_error());
-                $e->setSqlErrorNumber($GLOBALS['TYPO3_DB']->sql_errno());
-                $e->setSqlQuery($this->query);
-                throw $e;
             }
 
         } else {

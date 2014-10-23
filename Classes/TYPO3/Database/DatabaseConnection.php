@@ -61,6 +61,20 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
     public $isQueryStrictMode = FALSE;
 
     /**
+     * Ignore next query by query log
+     *
+     * @var bool
+     */
+    public $queryLogIgnoreNextQuery = FALSE;
+
+    /**
+     * Flag if query cost fetching is enabled
+     *
+     * @var bool
+     */
+    public $isQueryCostFetch = FALSE;
+
+    /**
      * Initialize the database connection
      *
      * @return void
@@ -71,12 +85,23 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
         $this->isQueryLogEnabled       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogEnabled();
         $this->isQueryLogTimingEnabled = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogTimingEnabled();
         $this->isQueryStrictMode       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryStrictModeEnabled();
+        $this->isQueryCostFetch        = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryCostFetchEnabled();
     }
 
     /**
      * @inherit
      */
     protected function query($query) {
+        // Check if ignore-mode is set
+        if ($this->queryLogIgnoreNextQuery) {
+            $this->queryLogIgnoreNextQuery = FALSE;
+            return parent::query($query);
+        }
+
+        #####################
+        # Query stats
+        #####################
+
         // Inc query counter
         $this->queryCount++;
 
@@ -86,30 +111,14 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
             $queryStartTime = microtime(true);
         }
 
-        // Run query
+        #####################
+        # Run query
+        #####################
+
+        // Exec query
         $ret = parent::query($query);
 
-        if ($this->isQueryLogEnabled) {
-            $queryStatus = 0;
-            if (!$ret || $this->sql_errno()) {
-                $queryStatus = $this->sql_errno();
-            }
-
-            // Call query time
-            $queryTime = null;
-            if ($queryStartTime) {
-                $queryTime = microtime(true) - $queryStartTime;
-            }
-
-            // Log query
-            \Lightwerk\DbalUtility\Service\RequestLogService::appendToLogfile(
-                \Lightwerk\DbalUtility\Service\RequestLogService::QUERY_TYPE_QUERY,
-                $query,
-                $queryStatus,
-                $queryTime
-            );
-        }
-
+        // Strict mode
         if ($this->isQueryStrictMode && (!$ret || $this->sql_errno())) {
             // SQL statement failed
             $errorMsg = 'SQL Error: ' . $this->sql_error() . ' [errno: ' . $this->sql_errno() . ']';
@@ -120,6 +129,43 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
             $e->setSqlQuery($query);
             throw $e;
         }
+
+        #####################
+        # Query log
+        #####################
+
+        if ($this->isQueryLogEnabled) {
+            $queryStatus = 0;
+            if (!$ret || $this->sql_errno()) {
+                $queryStatus = $this->sql_errno();
+            }
+
+            // Call query time
+            $queryTime = NULL;
+            if ($queryStartTime) {
+                $queryTime = microtime(true) - $queryStartTime;
+            }
+
+            // Fetch query cost
+            $queryCost = NULL;
+            if ($this->isQueryCostFetch) {
+                $costQuery = 'SHOW STATUS LIKE \'Last_query_cost\'';
+                $costRes = parent::query($costQuery);
+                if ($costRes && $costRow = $this->sql_fetch_assoc($costRes)) {
+                    $queryCost = end($costRow);
+                }
+            }
+
+            // Log query
+            \Lightwerk\DbalUtility\Service\RequestLogService::appendToLogfile(
+                \Lightwerk\DbalUtility\Service\RequestLogService::QUERY_TYPE_QUERY,
+                $query,
+                $queryStatus,
+                $queryTime,
+                $queryCost
+            );
+        }
+
 
         return $ret;
     }

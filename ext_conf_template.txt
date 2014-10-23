@@ -7,8 +7,11 @@ queryLogBE = 0
 	# cat=records/enable/003; type=boolean; label=Enable query logging for CLI
 queryLogCLI = 0
 
-	# cat=records/enable/003; type=boolean; label=Enable query timing logging
+	# cat=records/enable/004; type=boolean; label=Enable query timing logging
 queryLogTimings = 1
 
-	# cat=records/enable/003; type=boolean; label=Ignore cache queries
+	# cat=records/enable/005; type=boolean; label=Ignore cache queries
 queryLogIgnoreCacheQueries = 1
+
+	# cat=records/enable/006; type=boolean; label=Enable Query-Cost fetching
+queryLogCost = 0

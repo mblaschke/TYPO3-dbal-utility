@@ -61,9 +61,6 @@ class EnvironmentService {
         if($ret === NULL && self::isDebugMode()) {
             $ret = FALSE;
 
-            // Extract ext configuration
-            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
-
             if (TYPO3_MODE == 'FE' && self::getExtensionConfiguration('queryLogFE', 0)) {
                 // FE query log enabled
                 $ret = TRUE;
@@ -121,6 +118,22 @@ class EnvironmentService {
     }
 
     /**
+     * Check if fetching of query cost is enabeld
+     * (cached)
+     *
+     * @return bool
+     */
+    public static function isQueryCostFetchEnabled() {
+        static $ret = NULL;
+
+        if($ret === NULL) {
+            $ret = (bool)self::getExtensionConfiguration('queryLogCost', 0);
+        }
+
+        return $ret;
+    }
+
+    /**
      * Get extension configuration
      *
      * @param  string $key     Configuration key
@@ -142,5 +155,6 @@ class EnvironmentService {
 
         return $ret;
     }
+
 
 }

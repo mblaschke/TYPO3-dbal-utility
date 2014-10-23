@@ -126,12 +126,13 @@ class RequestLogService {
     /**
      * Append query to current log file
      *
-     * @param string    $queryType      SQL query type
-     * @param string    $queryStatement SQL query
-     * @param mixed     $queryStatus    SQL query statys
-     * @param float|int $queryTime      SQL query run time
+     * @param string         $queryType      SQL query type
+     * @param string         $queryStatement SQL query
+     * @param mixed          $queryStatus    SQL query statys
+     * @param float|int      $queryTime      SQL query run time
+     * @param float|int|null $queryCost      SQL query cost
      */
-    public static function appendToLogfile($queryType, $queryStatement, $queryStatus, $queryTime) {
+    public static function appendToLogfile($queryType, $queryStatement, $queryStatus, $queryTime, $queryCost) {
         static $fp = NULL;
 
         if ($fp === NULL) {
@@ -150,7 +151,7 @@ class RequestLogService {
         self::filterQuery($queryStatement);
 
         // Write query line (second and other lines)
-        fwrite($fp,  "\n". self::buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime));
+        fwrite($fp,  "\n". self::buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime, $queryCost));
     }
 
     /**
@@ -165,8 +166,32 @@ class RequestLogService {
 
         // TYPO3 caching queries
         if (EnvironmentService::isCacheQueriesAreIgnored()) {
-            if( preg_match('/(SELECT[\s]+.*[\s]+FROM|INSERT[\s]+INTO|DELETE[\s]+FROM)[\s]+(cache|cf)_[a-z]+/im', $queryStatement)) {
-                $queryStatement = '-- hidden TYPO3 caching query --';
+            if( preg_match('/(SELECT[\s]+.*[\s]+FROM|INSERT[\s]+INTO|DELETE[\s]+FROM)[\s]+(cache|cf)_[a-z]+/ims', $queryStatement, $matches)) {
+
+                $queryType = substr($matches[1], 0, 1);
+
+                switch (strtoupper($queryType)) {
+                    case 'S':
+                        $queryStatement = '-- hidden TYPO3 SELECT caching query --';
+                        break;
+
+                    case 'U':
+                        $queryStatement = '-- hidden TYPO3 UPDATE caching query --';
+                        break;
+
+                    case 'I':
+                        $queryStatement = '-- hidden TYPO3 INSERT caching query --';
+                        break;
+
+                    case 'D':
+                        $queryStatement = '-- hidden TYPO3 DELETE caching query --';
+                        break;
+
+                        break;
+                    default:
+                        $queryStatement = '-- hidden TYPO3 caching query --';
+                        break;
+                }
             }
         }
     }
@@ -219,13 +244,14 @@ class RequestLogService {
     /**
      * Build query log line
      *
-     * @param  string    $queryType      SQL query type
-     * @param  string    $queryStatement SQL query
-     * @param  mixed     $queryStatus    SQL query statys
-     * @param  float|int $queryTime      SQL query run time
+     * @param string         $queryType      SQL query type
+     * @param string         $queryStatement SQL query
+     * @param mixed          $queryStatus    SQL query statys
+     * @param float|int      $queryTime      SQL query run time
+     * @param float|int|null $queryCost      SQL query cost
      * @return string
      */
-    protected function buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime) {
+    protected function buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime, $queryCost) {
         // We don't want to have the full SQL line
         $maxLength = 2000;
         if (strlen($queryStatement) > $maxLength) {
@@ -237,6 +263,7 @@ class RequestLogService {
             'query'  => $queryStatement,
             'status' => $queryStatus,
             'time'   => $queryTime,
+            'cost'   => $queryCost,
         );
 
         return self::encodeLogLine($ret);
