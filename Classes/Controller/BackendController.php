@@ -36,6 +36,11 @@ class BackendController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionControll
      * List log files
      */
     public function mainAction() {
+        // Check context
+        if (!\TYPO3\CMS\Core\Utility\GeneralUtility::getApplicationContext()->isDevelopment()) {
+            $this->addFlashMessage('Query logging only available in DEVELOPMENT Context', '' , \TYPO3\CMS\Core\Messaging\AbstractMessage::INFO);
+        }
+
         // Expire old log files
         \Lightwerk\DbalUtility\Service\RequestLogService::expireLogFiles();
 
