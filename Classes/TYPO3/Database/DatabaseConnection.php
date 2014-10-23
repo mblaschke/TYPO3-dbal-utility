@@ -82,6 +82,9 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
     public function initialize() {
         parent::initialize();
 
+        // Inject DebugId into HTTP-Header
+        \Lightwerk\DbalUtility\TYPO3\OutputHttpHeader::addHttpHeaderDebugId();
+
         $this->isQueryLogEnabled       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogEnabled();
         $this->isQueryLogTimingEnabled = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogTimingEnabled();
         $this->isQueryStrictMode       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryStrictModeEnabled();

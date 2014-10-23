@@ -35,10 +35,18 @@ class OutputHttpHeader {
     /**
      * Add Debug HTTP Headers
      */
-    public function addHttpHeaders() {
+    public static function addHttpHeaderDebugId() {
+        if (\Lightwerk\DbalUtility\Service\EnvironmentService::isDebugMode() && !headers_sent()) {
+            header('X-TYPO3-QueryDebugId: ' . \Lightwerk\DbalUtility\Service\RequestLogService::currentDebugId());
+        }
+    }
+
+    /**
+     * Add Debug HTTP Headers
+     */
+    public static function addHttpHeaders() {
         if (\Lightwerk\DbalUtility\Service\EnvironmentService::isDebugMode() && !headers_sent()) {
             header('X-TYPO3-QueryCount:'    . (int)$GLOBALS['TYPO3_DB']->queryCount);
-            header('X-TYPO3-QueryDebugId: ' . \Lightwerk\DbalUtility\Service\RequestLogService::currentDebugId());
         }
     }
 
