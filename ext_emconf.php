@@ -2,7 +2,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'DBAL Utility',
-	'description' => '',
+	'description' => 'DBAL convenience methods and query log',
 	'category' => 'misc',
 	'shy' => 0,
 	'version' => '0.1.0',
