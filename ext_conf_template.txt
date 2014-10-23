@@ -16,8 +16,8 @@ queryLogCLI = 0
 	# cat=querylog/settings/005; type=boolean; label=Enable query timing logging
 queryLogTimings = 1
 
-	# cat=querylog/settings/006; type=boolean; label=Ignore cache queries
-queryLogIgnoreCacheQueries = 1
-
-	# cat=querylog/settings/007; type=boolean; label=Enable Query-Cost fetching
+	# cat=querylog/settings/006; type=boolean; label=Enable MySQL query cost logging
 queryLogCost = 0
+
+	# cat=querylog/settings/007; type=boolean; label=Ignore cache queries
+queryLogIgnoreCacheQueries = 1
