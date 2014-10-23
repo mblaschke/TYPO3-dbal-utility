@@ -1,4 +1,8 @@
-<f:be.container addCssFile="{f:uri.resource(path:'Backend/Css/Style.css')}">
+<f:be.container
+        loadJQuery="true"
+        includeCssFiles="{0: '{f:uri.resource(path:\'Backend/Css/Style.css\')}', 1: '{f:uri.resource(path:\'Vendor/DataTables/css/jquery.dataTables.min.css\')}' }"
+        includeJsFiles="{0: '{f:uri.resource(path:\'Vendor/DataTables/js/jquery.dataTables.min.js\')}' }"
+    >
 
 	<div class="typo3-fullDoc">
 

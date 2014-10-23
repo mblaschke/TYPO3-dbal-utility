@@ -9,3 +9,6 @@ queryLogCLI = 0
 
 	# cat=records/enable/003; type=boolean; label=Enable query timing logging
 queryLogTimings = 1
+
+	# cat=records/enable/003; type=boolean; label=Ignore cache queries
+queryLogIgnoreCacheQueries = 1

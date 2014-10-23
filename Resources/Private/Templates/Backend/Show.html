@@ -92,7 +92,7 @@
         </table>
 
 
-        <table border="0" cellpadding="0" cellspacing="1" width="100%" class="typo3-dblist">
+        <table id="dbal-queries" border="0" cellpadding="0" cellspacing="1" width="100%" class="typo3-dblist">
             <colgroup>
                 <col width="20" />
                 <col width="*" />
@@ -101,10 +101,10 @@
             </colgroup>
             <thead>
                 <tr>
-                    <td class="t3-row-header"></td>
-                    <td class="t3-row-header">Query</td>
-                    <td class="t3-row-header">Status</td>
-                    <td class="t3-row-header">Time</td>
+                    <th class="t3-row-header">#</th>
+                    <th class="t3-row-header">Query</th>
+                    <th class="t3-row-header">Status</th>
+                    <th class="t3-row-header">Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -142,5 +142,15 @@
             </tbody>
         </table>
     </f:if>
+
+    <script>
+        jQuery(document).ready(function($) {
+            $('#dbal-queries').dataTable( {
+                "scrollY":        "600px",
+                "scrollCollapse": true,
+                "paging":         false
+            } );
+        } );
+    </script>
 
 </f:section>

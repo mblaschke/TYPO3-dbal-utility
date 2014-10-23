@@ -25,7 +25,7 @@ namespace Lightwerk\DbalUtility\Log;
  ***************************************************************/
 
 /**
- * Database Debug Log Service
+ * Log file object
  *
  * @package     TYPO3
  * @subpackage  dbal_utility
@@ -78,10 +78,20 @@ class LogFile {
         }
     }
 
+    /**
+     * Get log id
+     *
+     * @return string
+     */
     public function getLogId() {
         return $this->logId;
     }
 
+    /**
+     * Get header (first file) line
+     *
+     * @return array|object
+     */
     public function getHeader() {
         if (!$this->header) {
             $this->readHeaderOnly();
@@ -90,6 +100,11 @@ class LogFile {
         return $this->header;
     }
 
+    /**
+     * Get query list
+     *
+     * @return array|object
+     */
     public function getQueryList() {
         if (!$this->queries) {
             $this->readLog();
@@ -98,7 +113,9 @@ class LogFile {
         return $this->queries;
     }
 
-
+    /**
+     * Read header (first) line of file
+     */
     protected function readHeaderOnly() {
         if (is_file($this->logFile)) {
             $f = fopen($this->logFile, 'r');
@@ -113,6 +130,9 @@ class LogFile {
         }
     }
 
+    /**
+     * Read whole file
+     */
     protected function readLog() {
         if (is_file($this->logFile)) {
             $content = file_get_contents($this->logFile);

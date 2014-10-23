@@ -2,3 +2,8 @@
     word-wrap: break-word;
     max-width: 600px;
 }
+
+.t3-row-header {
+    background-color: #666 !important;
+    color: #fff !important;
+}

@@ -143,13 +143,33 @@ class RequestLogService {
 
             // Open file, trunkate if needed and write header (on first line)
             $fp = fopen($logFile, 'w+');
-            fwrite($fp, self::generateLogHeader() . "\n");
+            fwrite($fp, self::generateLogHeader());
         }
 
+        // Filter query
+        self::filterQuery($queryStatement);
+
         // Write query line (second and other lines)
-        fwrite($fp, self::buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime) . "\n");
+        fwrite($fp,  "\n". self::buildQueryLine($queryType, $queryStatement, $queryStatus, $queryTime));
     }
 
+    /**
+     * Filter query
+     *
+     * @param string $queryStatement SQL Query
+     * @return string
+     */
+    protected static function filterQuery(&$queryStatement) {
+        // Trim query, we do not need whitespaces at begin and end
+        $queryStatement = trim($queryStatement);
+
+        // TYPO3 caching queries
+        if (EnvironmentService::isCacheQueriesAreIgnored()) {
+            if( preg_match('/(SELECT[\s]+.*[\s]+FROM|INSERT[\s]+INTO|DELETE[\s]+FROM)[\s]+(cache|cf)_[a-z]+/im', $queryStatement)) {
+                $queryStatement = '-- hidden TYPO3 caching query --';
+            }
+        }
+    }
 
     /**
      * Generate log header

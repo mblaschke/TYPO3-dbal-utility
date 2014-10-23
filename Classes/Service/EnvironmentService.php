@@ -25,7 +25,7 @@ namespace Lightwerk\DbalUtility\Service;
  ***************************************************************/
 
 /**
- * Database Debug Log Service
+ * Environment service
  *
  * @package     TYPO3
  * @subpackage  dbal_utility
@@ -64,13 +64,13 @@ class EnvironmentService {
             // Extract ext configuration
             $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
 
-            if (TYPO3_MODE == 'FE' && !empty($extConf['queryLogFE'])) {
+            if (TYPO3_MODE == 'FE' && self::getExtensionConfiguration('queryLogFE', 0)) {
                 // FE query log enabled
                 $ret = TRUE;
-            } elseif (TYPO3_MODE == 'BE' && !empty($extConf['queryLogBE'])) {
+            } elseif (TYPO3_MODE == 'BE' && self::getExtensionConfiguration('queryLogBE', 0)) {
                 // BE query log enabled
                 $ret = TRUE;
-            } elseif (defined('TYPO3_cliMode') && !empty($extConf['queryLogCLI'])) {
+            } elseif (defined('TYPO3_cliMode') && self::getExtensionConfiguration('queryLogCLI', 0)) {
                 // CLI query log enabled
                 $ret = TRUE;
             }
@@ -89,18 +89,58 @@ class EnvironmentService {
         static $ret = NULL;
 
         if($ret === NULL && self::isDebugMode()) {
-            // Extract ext configuration
-            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
-
-            $ret = !empty($extConf['queryLogTimings']);
+            $ret = (bool)self::getExtensionConfiguration('queryLogTimings', 1);
         }
 
         return $ret;
     }
 
+    /**
+     * Check if query strict mode (throw exception on error) is enabled
+     *
+     * @return bool
+     */
     public static function isQueryStrictModeEnabled() {
         return FALSE;
     }
 
+    /**
+     * Check if cache queries should be logged
+     * (Cached)
+     *
+     * @return bool
+     */
+    public static function isCacheQueriesAreIgnored() {
+        static $ret = NULL;
+
+        if($ret === NULL) {
+            $ret = (bool)self::getExtensionConfiguration('queryLogIgnoreCacheQueries', 1);
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Get extension configuration
+     *
+     * @param  string $key     Configuration key
+     * @param  mixed  $default Default value
+     * @return mixed
+     */
+    public static function getExtensionConfiguration($key, $default) {
+        static $extConf = NULL;
+
+        if($extConf === NULL) {
+            // Extract ext configuration
+            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
+        }
+
+        $ret = $default;
+        if (array_key_exists($key, $extConf)) {
+            $ret = $extConf[$key];
+        }
+
+        return $ret;
+    }
 
 }
