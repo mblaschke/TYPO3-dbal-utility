@@ -37,7 +37,7 @@ class OutputHttpHeader {
      */
     public static function addHttpHeaderDebugId() {
         if (\Lightwerk\DbalUtility\Service\EnvironmentService::isDebugMode() && !headers_sent()) {
-            header('X-TYPO3-QueryDebugId: ' . \Lightwerk\DbalUtility\Service\RequestLogService::currentDebugId());
+            header('X-TYPO3-QueryLog: ' . \Lightwerk\DbalUtility\Service\RequestLogService::currentDebugId());
         }
     }
 
