@@ -189,7 +189,7 @@ class RequestLogService {
                 $url = 'http://';
             }
 
-            $url .= $_SERVER['REMOTE_ADDR'];
+            $url .= $_SERVER['SERVER_NAME'];
             $url .= $_SERVER['REQUEST_URI'];
         }
 
