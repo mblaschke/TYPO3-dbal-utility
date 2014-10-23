@@ -92,6 +92,20 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
     }
 
     /**
+     * Fixes the SQL mode by unsetting NO_BACKSLASH_ESCAPES if found.
+     *
+     * @return void
+     */
+    protected function setSqlMode() {
+        parent::setSqlMode();
+
+        // Disable autocommit
+        if (\Lightwerk\DbalUtility\Service\EnvironmentService::getExtensionConfiguration('disableAutoCommit', 0)) {
+            $this->sql_query('SET AUTOCOMMIT=0');
+        }
+    }
+
+    /**
      * @inherit
      */
     protected function query($query) {

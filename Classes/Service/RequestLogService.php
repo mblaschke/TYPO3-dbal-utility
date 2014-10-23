@@ -65,13 +65,16 @@ class RequestLogService {
      * Expire log files
      */
     public static function expireLogFiles() {
+        // Get file timeout for log files
+        $timeout = abs( EnvironmentService::getExtensionConfiguration('queryLogTimeout', 10) );
+
         // Clear old log files in directory
         $currTime = time();
         foreach (new \DirectoryIterator(self::logDirectory()) as $fileInfo) {
             if ($fileInfo->isDot()) {
                 continue;
             }
-            if ($currTime - $fileInfo->getCTime() >= 10 * 60) {
+            if ($currTime - $fileInfo->getCTime() >= $timeout * 60) {
                 unlink($fileInfo->getRealPath());
             }
         }

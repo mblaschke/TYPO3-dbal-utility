@@ -1,17 +1,23 @@
-	# cat=records/enable/001; type=boolean; label=Enable query logging for FE
+	# cat=basic/enable/001; type=boolean; label=Disable MySQL auto commit
+disableAutoCommit = 0
+
+	# cat=querylog/settings/001; type=int; label=Clear timeout for log files (in minutes)
+queryLogTimeout = 10
+
+	# cat=querylog/settings/002; type=boolean; label=Enable query logging for FE
 queryLogFE = 0
 
-	# cat=records/enable/002; type=boolean; label=Enable query logging for BE
+	# cat=querylog/settings/003; type=boolean; label=Enable query logging for BE
 queryLogBE = 0
 
-	# cat=records/enable/003; type=boolean; label=Enable query logging for CLI
+	# cat=querylog/settings/004; type=boolean; label=Enable query logging for CLI
 queryLogCLI = 0
 
-	# cat=records/enable/004; type=boolean; label=Enable query timing logging
+	# cat=querylog/settings/005; type=boolean; label=Enable query timing logging
 queryLogTimings = 1
 
-	# cat=records/enable/005; type=boolean; label=Ignore cache queries
+	# cat=querylog/settings/006; type=boolean; label=Ignore cache queries
 queryLogIgnoreCacheQueries = 1
 
-	# cat=records/enable/006; type=boolean; label=Enable Query-Cost fetching
+	# cat=querylog/settings/007; type=boolean; label=Enable Query-Cost fetching
 queryLogCost = 0
