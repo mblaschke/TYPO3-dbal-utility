@@ -1,4 +1,4 @@
-{namespace advDbal=Lightwerk\DbalUtility\ViewHelpers}
+{namespace dbalUtility=Lightwerk\DbalUtility\ViewHelpers}
 <f:layout name="Backend" />
 
 <f:section name="title">
@@ -115,7 +115,7 @@
                     </td>
                     <td class="dbal-query">
                         <b>{Query.type}:</b>
-                        <advDbal:sqlBeautifier>{Query.query}</advDbal:sqlBeautifier>
+                        <dbalUtility:sqlBeautifier>{Query.query}</dbalUtility:sqlBeautifier>
                     </td>
                     <td>
                         <f:if condition="{Query.status}">
@@ -130,7 +130,7 @@
                     <td>
                         <f:if condition="{Query.time}">
                             <f:then>
-                                <advDbal:sqlQueryTime>{Query.time}</advDbal:sqlQueryTime>
+                                <dbalUtility:sqlQueryTime>{Query.time}</dbalUtility:sqlQueryTime>
                             </f:then>
                             <f:else>
                                 -
