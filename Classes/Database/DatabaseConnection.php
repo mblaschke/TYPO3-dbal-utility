@@ -25,7 +25,7 @@ namespace Lightwerk\DbalUtility\Database;
  ***************************************************************/
 
 /**
- * Database Connection
+ * Advanced Database Connection
  *
  * @package     TYPO3
  * @subpackage  dbal_utility
@@ -245,7 +245,7 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch count (from query)
+     * Fetch count (from query, with subselect)
      *
      * @param  string $query SQL query
      * @return integer
@@ -502,4 +502,445 @@ class DatabaseConnection {
             $this->connection->sql_free_result($res);
         }
     }
+
+
+    ###########################################################################
+    # Proxy methods
+    ###########################################################################
+
+    public function cacheFieldInfo()
+    {
+        return $this->connection->cacheFieldInfo();
+    }
+
+    public function INSERTquery($table, $fields_values, $no_quote_fields = FALSE)
+    {
+        return $this->connection->INSERTquery($table, $fields_values, $no_quote_fields);
+    }
+
+    public function INSERTmultipleRows($table, array $fields, array $rows, $no_quote_fields = FALSE)
+    {
+        return $this->connection->INSERTmultipleRows($table, $fields, $rows, $no_quote_fields);
+    }
+
+    public function DELETEquery($table, $where)
+    {
+        return $this->connection->DELETEquery($table, $where);
+    }
+
+    public function SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
+    {
+        return $this->connection->SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
+    }
+
+    public function MetaType($type, $table, $maxLength = -1)
+    {
+        return $this->connection->MetaType($type, $table, $maxLength);
+    }
+
+    public function MySQLMetaType($t)
+    {
+        return $this->connection->MySQLMetaType($t);
+    }
+
+    public function MySQLActualType($meta)
+    {
+        return $this->connection->MySQLActualType($meta);
+    }
+
+    public function SELECTsubquery($select_fields, $from_table, $where_clause)
+    {
+        return $this->connection->SELECTsubquery($select_fields, $from_table, $where_clause);
+    }
+
+    public function UPDATEquery($table, $where, $fields_values, $no_quote_fields = FALSE)
+    {
+        return $this->connection->UPDATEquery($table, $where, $fields_values, $no_quote_fields);
+    }
+
+    public function TRUNCATEquery($table)
+    {
+        return $this->connection->TRUNCATEquery($table);
+    }
+
+    public function admin_get_dbs()
+    {
+        return $this->connection->admin_get_dbs();
+    }
+
+    public function admin_get_tables()
+    {
+        return $this->connection->admin_get_tables();
+    }
+
+    public function admin_get_fields($tableName)
+    {
+        return $this->connection->admin_get_fields($tableName);
+    }
+
+    public function admin_get_keys($tableName)
+    {
+        return $this->connection->admin_get_keys($tableName);
+    }
+
+    public function admin_get_charsets()
+    {
+        return $this->connection->admin_get_charsets();
+    }
+
+    public function admin_query($query)
+    {
+        return $this->connection->admin_query($query);
+    }
+
+    public function cleanIntArray($arr)
+    {
+        return $this->connection->cleanIntArray($arr);
+    }
+
+    public function cleanIntList($list)
+    {
+        return $this->connection->cleanIntList($list);
+    }
+
+    public function clearCachedFieldInfo()
+    {
+        return $this->connection->clearCachedFieldInfo();
+    }
+
+    public function connectDB($host = NULL, $username = NULL, $password = NULL, $db = NULL)
+    {
+        return $this->connection->connectDB($host, $username, $password, $db);
+    }
+
+    public function debug($func, $query = '')
+    {
+        return $this->connection->debug($func, $query);
+    }
+
+    public function debugHandler($function, $execTime, $inData)
+    {
+        return $this->connection->debugHandler($function, $execTime, $inData);
+    }
+
+    public function debug_WHERE($table, $where, $script = '')
+    {
+        return $this->connection->debug_WHERE($table, $where, $script);
+    }
+
+    public function debug_check_recordset($res)
+    {
+        return $this->connection->debug_check_recordset($res);
+    }
+
+    public function debug_log($query, $ms, $data, $join, $errorFlag, $script = '')
+    {
+        return $this->connection->debug_log($query, $ms, $data, $join, $errorFlag, $script);
+    }
+
+    public function debug_explain($query)
+    {
+        return $this->connection->debug_explain($query);
+    }
+
+    public function escapeStrForLike($str, $table)
+    {
+        return $this->connection->escapeStrForLike($str, $table);
+    }
+
+    public function exec_INSERTquery($table, $fields_values, $no_quote_fields = FALSE)
+    {
+        return $this->connection->exec_INSERTquery($table, $fields_values, $no_quote_fields);
+    }
+
+    public function exec_INSERTmultipleRows($table, array $fields, array $rows, $no_quote_fields = FALSE)
+    {
+        return $this->connection->exec_INSERTmultipleRows($table, $fields, $rows, $no_quote_fields);
+    }
+
+    public function exec_DELETEquery($table, $where)
+    {
+        return $this->connection->exec_DELETEquery($table, $where);
+    }
+
+    public function exec_SELECT_mm_query($select, $local_table, $mm_table, $foreign_table, $whereClause = '', $groupBy = '', $orderBy = '', $limit = '')
+    {
+        return $this->connection->exec_SELECT_mm_query($select, $local_table, $mm_table, $foreign_table, $whereClause, $groupBy, $orderBy, $limit);
+    }
+
+    public function exec_SELECT_queryArray($queryParts)
+    {
+        return $this->connection->exec_SELECT_queryArray($queryParts);
+    }
+
+    public function exec_SELECTgetRows($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '', $uidIndexField = '')
+    {
+        return $this->connection->exec_SELECTgetRows($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit, $uidIndexField);
+    }
+
+    public function exec_SELECTgetSingleRow($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $numIndex = FALSE)
+    {
+        return $this->connection->exec_SELECTgetSingleRow($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $numIndex);
+    }
+
+    public function exec_SELECTcountRows($field, $table, $where = '')
+    {
+        return $this->connection->exec_SELECTcountRows($field, $table, $where);
+    }
+
+    public function exec_UPDATEquery($table, $where, $fields_values, $no_quote_fields = FALSE)
+    {
+        return $this->connection->exec_UPDATEquery($table, $where, $fields_values, $no_quote_fields);
+    }
+
+    public function exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '')
+    {
+        return $this->connection->exec_SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit);
+    }
+
+    public function exec_TRUNCATEquery($table)
+    {
+        return $this->connection->exec_TRUNCATEquery($table);
+    }
+
+    public function fullQuoteArray($arr, $table, $noQuote = FALSE, $allowNull = FALSE)
+    {
+        return $this->connection->fullQuoteArray($arr, $table, $noQuote, $allowNull);
+    }
+
+    public function fullQuoteStr($str, $table, $allowNull = FALSE)
+    {
+        return $this->connection->fullQuoteStr($str, $table, $allowNull);
+    }
+
+    public function getDateTimeFormats($table)
+    {
+        return $this->connection->getDateTimeFormats($table);
+    }
+
+    public function getDatabaseHandle()
+    {
+        return $this->connection->getDatabaseHandle();
+    }
+
+    public function initialize()
+    {
+        return $this->connection->initialize();
+    }
+
+    public function quoteWhereClause($where_clause)
+    {
+        return $this->connection->quoteWhereClause($where_clause);
+    }
+
+    public function quoteStr($str, $table)
+    {
+        return $this->connection->quoteStr($str, $table);
+    }
+
+    public function handler_getFromTableList($tableList)
+    {
+        return $this->connection->handler_getFromTableList($tableList);
+    }
+
+    public function handler_init($handlerKey)
+    {
+        return $this->connection->handler_init($handlerKey);
+    }
+
+    public function isConnected()
+    {
+        return $this->connection->isConnected();
+    }
+
+    public function listQuery($field, $value, $table)
+    {
+        return $this->connection->listQuery($field, $value, $table);
+    }
+
+    public function prepare_SELECTquery($select_fields, $from_table, $where_clause, $groupBy = '', $orderBy = '', $limit = '', array $input_parameters = array())
+    {
+        return $this->connection->prepare_SELECTquery($select_fields, $from_table, $where_clause, $groupBy, $orderBy, $limit, $input_parameters);
+    }
+
+    public function prepare_PREPAREDquery($query, array $queryComponents)
+    {
+        return $this->connection->prepare_PREPAREDquery($query, $queryComponents);
+    }
+
+    public function prepare_SELECTqueryArray(array $queryParts, array $input_parameters = array())
+    {
+        return $this->connection->prepare_SELECTqueryArray($queryParts, $input_parameters);
+    }
+
+    public function quoteFieldNames($select_fields)
+    {
+        return $this->connection->quoteFieldNames($select_fields);
+    }
+
+    public function quoteFromTables($from_table)
+    {
+        return $this->connection->quoteFromTables($from_table);
+    }
+
+    public function quoteName($name, $handlerKey = NULL, $useBackticks = FALSE)
+    {
+        return $this->connection->quoteName($name, $handlerKey, $useBackticks);
+    }
+
+    public function runningNative()
+    {
+        return $this->connection->runningNative();
+    }
+
+    public function runningADOdbDriver($driver)
+    {
+        return $this->connection->runningADOdbDriver($driver);
+    }
+
+    public function searchQuery($searchWords, $fields, $table, $constraint = \TYPO3\CMS\Core\Database\DatabaseConnection::AND_Constraint)
+    {
+        return $this->connection->searchQuery($searchWords, $fields, $table, $constraint);
+    }
+
+    public function splitGroupOrderLimit($str)
+    {
+        return $this->connection->splitGroupOrderLimit($str);
+    }
+
+    public function setDatabaseHost($host = 'localhost')
+    {
+        return $this->connection->setDatabaseHost($host);
+    }
+
+    public function setDatabasePort($port = 3306)
+    {
+        return $this->connection->setDatabasePort($port);
+    }
+
+    public function setDatabaseSocket($socket = NULL)
+    {
+        return $this->connection->setDatabaseSocket($socket);
+    }
+
+    public function setDatabaseName($name)
+    {
+        return $this->connection->setDatabaseName($name);
+    }
+
+    public function setDatabaseUsername($username)
+    {
+        return $this->connection->setDatabaseUsername($username);
+    }
+
+    public function setDatabasePassword($password)
+    {
+        return $this->connection->setDatabasePassword($password);
+    }
+
+    public function setPersistentDatabaseConnection($persistentDatabaseConnection)
+    {
+        return $this->connection->setPersistentDatabaseConnection($persistentDatabaseConnection);
+    }
+
+    public function setConnectionCompression($connectionCompression)
+    {
+        return $this->connection->setConnectionCompression($connectionCompression);
+    }
+
+    public function setInitializeCommandsAfterConnect(array $commands)
+    {
+        return $this->connection->setInitializeCommandsAfterConnect($commands);
+    }
+
+    public function setConnectionCharset($connectionCharset = 'utf8')
+    {
+        return $this->connection->setConnectionCharset($connectionCharset);
+    }
+
+    public function setDatabaseHandle($handle)
+    {
+        return $this->connection->setDatabaseHandle($handle);
+    }
+
+    public function sql_error()
+    {
+        return $this->connection->sql_error();
+    }
+
+    public function sql_errno()
+    {
+        return $this->connection->sql_errno();
+    }
+
+    public function sql_num_rows($res)
+    {
+        return $this->connection->sql_num_rows($res);
+    }
+
+    public function sql_fetch_assoc($res)
+    {
+        return $this->connection->sql_fetch_assoc($res);
+    }
+
+    public function sql_fetch_row($res)
+    {
+        return $this->connection->sql_fetch_row($res);
+    }
+
+    public function sql_free_result($res)
+    {
+        return $this->connection->sql_free_result($res);
+    }
+
+    public function sql_insert_id()
+    {
+        return $this->connection->sql_insert_id();
+    }
+
+    public function sql_affected_rows()
+    {
+        return $this->connection->sql_affected_rows();
+    }
+
+    public function sql_data_seek($res, $seek)
+    {
+        return $this->connection->sql_data_seek($res, $seek);
+    }
+
+    public function sql_field_metatype($table, $field)
+    {
+        return $this->connection->sql_field_metatype($table, $field);
+    }
+
+    public function sql_field_type($res, $pointer)
+    {
+        return $this->connection->sql_field_type($res, $pointer);
+    }
+
+    public function sql_query($query)
+    {
+        return $this->connection->sql_query($query);
+    }
+
+    public function sql_pconnect($host = NULL, $username = NULL, $password = NULL)
+    {
+        return $this->connection->sql_pconnect($host, $username, $password);
+    }
+
+    public function sql_select_db($TYPO3_db = NULL)
+    {
+        return $this->connection->sql_select_db($TYPO3_db);
+    }
+
+    public function stripOrderBy($str)
+    {
+        return $this->connection->stripOrderBy($str);
+    }
+
+    public function stripGroupBy($str)
+    {
+        return $this->connection->stripGroupBy($str);
+    }
+
 }
