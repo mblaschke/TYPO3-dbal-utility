@@ -1,5 +1,9 @@
-	# cat=basic/enable/001; type=boolean; label=Disable MySQL auto commit
+	# cat=mysql/enable/001; type=boolean; label=Disable MySQL auto commit
 disableAutoCommit = 0
+
+	# cat=mysql/enable/002; type=boolean; label=Enable SQL Exceptions for all methods
+sqlExceptions = 0
+
 
 	# cat=querylog/settings/001; type=int; label=Clear timeout for log files (in minutes)
 queryLogTimeout = 10

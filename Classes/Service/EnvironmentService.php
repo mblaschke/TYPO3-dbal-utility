@@ -97,8 +97,14 @@ class EnvironmentService {
      *
      * @return bool
      */
-    public static function isQueryStrictModeEnabled() {
-        return FALSE;
+    public static function isSqlExceptionsEnabled() {
+        static $ret = NULL;
+
+        if($ret === NULL && self::isDebugMode()) {
+            $ret = (bool)self::getExtensionConfiguration('sqlExceptions', 0);
+        }
+
+        return $ret;
     }
 
     /**
@@ -144,8 +150,15 @@ class EnvironmentService {
         static $extConf = NULL;
 
         if($extConf === NULL) {
-            // Extract ext configuration
-            $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
+
+            // Extract ext configuration (if available)
+            if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility'])) {
+                $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['dbal_utility']);
+            }
+
+            if (!is_array($extConf)) {
+                $extConf = array();
+            }
         }
 
         $ret = $default;

@@ -59,7 +59,7 @@ class PreparedStatement extends \TYPO3\CMS\Core\Database\PreparedStatement {
             $ret = parent::execute($input_parameters);
 
             // Strict mode
-            if ($GLOBALS['TYPO3_DB']->isQueryStrictMode && (!$ret || $GLOBALS['TYPO3_DB']->sql_errno())) {
+            if ($GLOBALS['TYPO3_DB']->isSqlExceptionsEnabled && (!$ret || $GLOBALS['TYPO3_DB']->sql_errno())) {
                 // SQL statement failed
                 $errorMsg = 'SQL Error: ' . $GLOBALS['TYPO3_DB']->sql_error() . ' [errno: ' . $GLOBALS['TYPO3_DB']->sql_errno() . ']';
 

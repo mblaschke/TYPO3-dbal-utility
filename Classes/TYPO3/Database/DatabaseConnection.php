@@ -58,7 +58,7 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
      *
      * @var bool
      */
-    public $isQueryStrictMode = FALSE;
+    public $isSqlExceptionsEnabled = FALSE;
 
     /**
      * Ignore next query by query log
@@ -87,7 +87,7 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
 
         $this->isQueryLogEnabled       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogEnabled();
         $this->isQueryLogTimingEnabled = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryLogTimingEnabled();
-        $this->isQueryStrictMode       = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryStrictModeEnabled();
+        $this->isSqlExceptionsEnabled  = \Lightwerk\DbalUtility\Service\EnvironmentService::isSqlExceptionsEnabled();
         $this->isQueryCostFetch        = \Lightwerk\DbalUtility\Service\EnvironmentService::isQueryCostFetchEnabled();
     }
 
@@ -136,7 +136,7 @@ class DatabaseConnection extends \TYPO3\CMS\Core\Database\DatabaseConnection {
         $ret = parent::query($query);
 
         // Strict mode
-        if ($this->isQueryStrictMode && (!$ret || $this->sql_errno())) {
+        if ($this->isSqlExceptionsEnabled && (!$ret || $this->sql_errno())) {
             // SQL statement failed
             $errorMsg = 'SQL Error: ' . $this->sql_error() . ' [errno: ' . $this->sql_errno() . ']';
 
