@@ -97,12 +97,12 @@ class DatabaseConnection {
     ###########################################################################
 
     /**
-     * Fetch one
+     * Get first value from query
      *
      * @param  string $query SQL query
      * @return mixed
      */
-    public function fetchOne($query) {
+    public function getOne($query) {
         $ret = NULL;
 
         $res = $this->_query($query);
@@ -117,12 +117,12 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch row
+     * Get first row from query
      *
-     * @param   string $query SQL query
+     * @param  string $query SQL query
      * @return array
      */
-    public function fetchRow($query) {
+    public function getRow($query) {
         $ret = NULL;
 
         $res = $this->_query($query);
@@ -137,12 +137,12 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch All
+     * Get whole result set from query
      *
      * @param  string  $query SQL query
      * @return array
      */
-    public function fetchAll($query) {
+    public function getAll($query) {
         $ret = array();
 
         $res = $this->_query($query);
@@ -157,13 +157,13 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch All with index (first value)
+     * Get whole result set from query (indexed array)
      *
      * @param  string $query    SQL query
      * @param  string $indexCol Index column name
      * @return array
      */
-    public function fetchAllWithIndex($query, $indexCol = NULL) {
+    public function getAllIndexed($query, $indexCol = NULL) {
         $ret = array();
 
         $res = $this->_query($query);
@@ -185,12 +185,14 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch List
+     * Get list from query
+     *
+     * First value is array key, second value is array value
      *
      * @param  string $query SQL query
      * @return array
      */
-    public function fetchList($query) {
+    public function getList($query) {
         $ret = array();
 
         $res = $this->_query($query);
@@ -205,12 +207,12 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch column
+     * Get (first) column from query
      *
      * @param  string $query SQL query
      * @return array
      */
-    public function fetchCol($query) {
+    public function getCol($query) {
         $ret = array();
 
         $res = $this->_query($query);
@@ -225,12 +227,12 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch column
+     * Get (first) column from query (indexed array)
      *
      * @param  string $query SQL query
      * @return array
      */
-    public function fetchColWithIndex($query) {
+    public function getColIndexed($query) {
         $ret = array();
 
         $res = $this->_query($query);
@@ -245,18 +247,20 @@ class DatabaseConnection {
     }
 
     /**
-     * Fetch count (from query, with subselect)
+     * Get row count from query (with subselect)
      *
      * @param  string $query SQL query
      * @return integer
      */
-    public function fetchCount($query) {
+    public function getCount($query) {
         $query = 'SELECT COUNT(*) FROM (' . $query . ') tmp';
         return $this->fetchOne($query);
     }
 
     /**
      * Exec query (INSERT)
+     *
+     * Exec query and return last insert id
      *
      * @param  string  $query SQL query
      * @return integer        Last insert id
@@ -276,6 +280,8 @@ class DatabaseConnection {
 
     /**
      * Exec query (DELETE, UPDATE etc)
+     *
+     * Exec query and return affected rows
      *
      * @param  string  $query SQL query
      * @return integer        Affected rows
@@ -455,7 +461,7 @@ class DatabaseConnection {
      * Execute sql query
      *
      * @param   string $query SQL query
-     * @return  resource
+     * @return  \Lightwerk\DbalUtility\Database\DatabaseResult
      * @throws  \Exception
      */
     public function query($query) {
@@ -476,18 +482,14 @@ class DatabaseConnection {
      * @throws  DatabaseException
      */
     protected function _query($query) {
+        // Enable sql exceptions
+        $oldMode = $this->connection->isSqlExceptionsEnabled;
+        $this->connection->isSqlExceptionsEnabled = TRUE;
+
         $res = $this->connection->sql_query($query);
 
-        if (!$res || $this->connection->sql_errno()) {
-            // SQL statement failed
-            $errorMsg = 'SQL Error: ' . $this->connection->sql_error() . ' [errno: ' . $this->connection->sql_errno() . ']';
-
-            $e = new \Lightwerk\DbalUtility\Database\DatabaseException($errorMsg, 1403340242);
-            $e->setSqlError($this->connection->sql_error());
-            $e->setSqlErrorNumber($this->connection->sql_errno());
-            $e->setSqlQuery($query);
-            throw $e;
-        }
+        // Reset to old mode
+        $this->connection->isSqlExceptionsEnabled = $oldMode;
 
         return $res;
     }

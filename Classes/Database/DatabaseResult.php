@@ -202,7 +202,7 @@ class DatabaseResult implements \Iterator {
      * @param   mixed   $indexCol   Index column name
      * @return  array
      */
-    public function fetchAllWithIndex($indexCol = false) {
+    public function fetchAllIndexed($indexCol = false) {
         // INIT
         $ret = array();
 
