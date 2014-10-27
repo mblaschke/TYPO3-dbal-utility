@@ -158,7 +158,7 @@ class DatabaseResult implements \Iterator {
      *
      * @return integer
      */
-    public function count() {
+    public function rowCount() {
         return $this->queryRowCount;
     }
 
